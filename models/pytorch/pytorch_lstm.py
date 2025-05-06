@@ -29,11 +29,13 @@ class LSTMClassifier(nn.Module):
         super(LSTMClassifier, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, num_classes)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
         x = x.squeeze(1)  # [B, 1, 28, 28] -> [B, 28, 28]
         out, _ = self.lstm(x)
         out = self.fc(out[:, -1, :]) # shape: [batch_size, 28, hidden_size]
+        out = self.softmax(out)
         return out
 
 model = LSTMClassifier(input_size, hidden_size, num_layers, num_classes).to(device)

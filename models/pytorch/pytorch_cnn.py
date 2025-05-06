@@ -22,8 +22,10 @@ test_loader = DataLoader(test_set, batch_size=32, shuffle=False)
 class CNN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.bn2 = nn.BatchNorm2d(64)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(9216, 128)
@@ -31,8 +33,12 @@ class CNN(nn.Module):
         
     def forward(self, x):
         # 输入: [B, 1, 28, 28] (B为批次大小)
-        x = self.conv1(x) # conv1: [B, 32, 26, 26] (28x28 → 26x26，3x3卷积核，步长1)
-        x = nn.ReLU()(x)
+        # x = self.conv1(x) # conv1: [B, 32, 26, 26] (28x28 → 26x26，3x3卷积核，步长1)
+        # x = nn.ReLU()(x)
+        # [width + 2padding - kernel_size]/stride + 1 = width
+        y = nn.ReLU()(self.bn1(self.conv1(x))) # conv1: [B, 32, 28, 28] (28x28 → 26x26，3x3卷积核，步长1)
+        x = x + y
+
         x = self.conv2(x) # conv2: [B, 64, 24, 24] (26x26 → 24x24，3x3卷积核，步长1)
         x = nn.ReLU()(x)
         x = nn.MaxPool2d(2)(x) # MaxPool2d: [B, 64, 12, 12] (24x24 → 12x12，2x2池化)

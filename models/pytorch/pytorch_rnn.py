@@ -42,6 +42,7 @@ class RNN(nn.Module):
         self.hidden_size = hidden_size
         self.rnn = nn.RNN(input_size, hidden_size, num_layers=num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, num_classes)
+        self.softmax = nn.LogSoftmax(dim=1)
         
     def forward(self, x):
         # 初始化隐藏状态
@@ -52,6 +53,7 @@ class RNN(nn.Module):
         
         # 解码最后一个时间步的隐藏状态
         out = self.fc(out[:, -1, :])
+        out = self.softmax(out)
         return out
 
 input_size = X_train.shape[2]  # 1000 (词汇大小)

@@ -19,7 +19,9 @@ X = vectorizer.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # 创建模型
-model = MultinomialNB()
+model = MultinomialNB(
+    alpha=1.0,          # Additive smoothing parameter (default=1.0)
+)
 
 # 训练模型
 model.fit(X_train, y_train)

@@ -7,7 +7,12 @@ import matplotlib.pyplot as plt
 X, y = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=0)
 
 # 应用KMeans
-model = KMeans(n_clusters=4, random_state=42)
+model = KMeans(
+    n_clusters=4, # 2-20 | Domain knowledge/elbow method
+    # max_iter=300, # 10-500 | Convergence, For large/complex datasets
+    # n_init=10, # 1-20 | Number of initializations, Ensure stable centroids
+    random_state=42
+)
 model.fit(X)
 y_kmeans = model.predict(X)
 

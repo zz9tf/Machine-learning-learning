@@ -1,0 +1,22 @@
+model:
+  hidden_channels: 32
+  embedding_dim: 2
+training:
+  batch_size: 32
+  initial_lr: 0.01
+  max_epochs: 150
+  lr_decay_epochs: [100, 125]
+  lr_decay_factor: 0.5
+  early_stopping:
+    patience: 40
+    min_delta: 0.0005
+    monitor: "accuracy"
+    enabled: true
+
+data:
+  train_val_split: 0.8
+
+output:
+  save_model: true
+  model_dir: "models"
+  plots_dir: null
